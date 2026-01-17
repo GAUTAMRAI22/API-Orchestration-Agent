@@ -1,4 +1,4 @@
-🔹 REDIS (CACHE / STATE)
+ REDIS (CACHE / STATE)
 backend/app/services/http_client.py
 import redis
 import os
