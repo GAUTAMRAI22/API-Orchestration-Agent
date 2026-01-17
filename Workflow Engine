@@ -1,0 +1,44 @@
+backend/app/orchestrator/workflow_loader.py
+import yaml
+
+def load_workflow(name: str):
+    with open(f"workflows/{name}.yaml") as f:
+        return yaml.safe_load(f)
+
+backend/app/orchestrator/executor.py
+import httpx
+from app.orchestrator.retry import retry_request
+
+async def execute_step(step):
+    async with httpx.AsyncClient() as client:
+        response = await retry_request(
+            client.request,
+            step["method"],
+            step["url"]
+        )
+        return response.json()
+
+backend/app/orchestrator/retry.py
+from tenacity import retry, stop_after_attempt, wait_fixed
+
+@retry(stop=stop_after_attempt(3), wait=wait_fixed(2))
+async def retry_request(func, *args, **kwargs):
+    return await func(*args, **kwargs)
+
+backend/app/orchestrator/engine.py
+from app.orchestrator.workflow_loader import load_workflow
+from app.orchestrator.executor import execute_step
+from app.ai.decision import decide_workflow
+
+async def run_workflow(user_input: dict):
+    workflow_name = decide_workflow(user_input)
+    workflow = load_workflow(workflow_name)
+
+    results = {}
+    for step in workflow["steps"]:
+        results[step["name"]] = await execute_step(step)
+
+    return {
+        "workflow": workflow_name,
+        "result": results
+    }
