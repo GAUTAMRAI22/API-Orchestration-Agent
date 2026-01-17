@@ -1,0 +1,25 @@
+api-orchestration-agent/
+│
+├── backend/
+│   ├── app/
+│   │   ├── main.py
+│   │   ├── orchestrator/
+│   │   │   ├── engine.py
+│   │   │   ├── workflow_loader.py
+│   │   │   └── executor.py
+│   │   ├── api/
+│   │   │   └── routes.py
+│   │   ├── models/
+│   │   ├── services/
+│   │   └── utils/
+│   ├── requirements.txt
+│   └── Dockerfile
+│
+├── workflows/
+│   └── sample_workflow.yaml
+│
+├── docker-compose.yml
+├── .env.example
+├── .gitignore
+├── README.md
+└── LICENSE
