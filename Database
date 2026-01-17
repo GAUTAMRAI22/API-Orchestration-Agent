@@ -1,0 +1,25 @@
+DATABASE (PostgreSQL)
+backend/app/db/session.py
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+import os
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(bind=engine)
+
+backend/app/db/models.py
+from sqlalchemy import Column, Integer, String, JSON, DateTime
+from sqlalchemy.ext.declarative import declarative_base
+from datetime import datetime
+
+Base = declarative_base()
+
+class WorkflowLog(Base):
+    __tablename__ = "workflow_logs"
+
+    id = Column(Integer, primary_key=True)
+    workflow_name = Column(String)
+    payload = Column(JSON)
+    created_at = Column(DateTime, default=datetime.utcnow)
