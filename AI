@@ -1,0 +1,20 @@
+AI (LLM-BASED ORCHESTRATION)
+backend/app/ai/decision.py
+import openai
+import os
+
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
+def decide_workflow(user_input):
+    prompt = f"""
+    Decide the best workflow for this request:
+    {user_input}
+    Available workflows: daily_summary, sales_report
+    """
+
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[{"role": "user", "content": prompt}]
+    )
+
+    return "daily_summary"
