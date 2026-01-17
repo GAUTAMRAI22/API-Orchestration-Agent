@@ -1,0 +1,34 @@
+BACKEND (FastAPI)
+backend/requirements.txt
+fastapi
+uvicorn
+httpx
+sqlalchemy
+psycopg2-binary
+redis
+python-dotenv
+pyyaml
+tenacity
+openai
+
+backend/app/main.py
+from fastapi import FastAPI
+from app.api.routes import router
+
+app = FastAPI(title="API Orchestration Agent")
+
+app.include_router(router)
+
+@app.get("/")
+def health():
+    return {"status": "running"}
+
+backend/app/api/routes.py
+from fastapi import APIRouter
+from app.orchestrator.engine import run_workflow
+
+router = APIRouter()
+
+@router.post("/orchestrate")
+async def orchestrate(payload: dict):
+    return await run_workflow(payload)
